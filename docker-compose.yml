@@ -1,0 +1,18 @@
+services:
+  qgis:
+    build: ./qgis
+    image: qgis-property-report:dev
+    env_file:
+      - path: .env          # optional: OSM_USER_AGENT, OVERPASS_URL (see .env.example)
+        required: false
+    environment:
+      QT_QPA_PLATFORM: offscreen
+      REPORT_CACHE_DIR: /cache
+    working_dir: /app
+    volumes:
+      - ./qgis:/app      # live-edit scripts without rebuilding
+      - ./out:/out       # generated reports (PDF, GPKG, JSON)
+      - ./samples:/samples:ro
+      - ./samples/overpass_cache:/samples/overpass_cache  # writable: bundled demo responses
+      - ./cache:/cache   # Nominatim / Overpass response cache (default /cache/overpass)
+    command: ["python3", "test_qgis.py"]
