@@ -1,0 +1,21 @@
+{
+  "type": "FeatureCollection",
+  "name": "kas_demo_pois",
+  "description": "Hand-made demo POIs around Kas, Turkey. Positions are APPROXIMATE and for testing only; replaced by OpenStreetMap/Overpass data in Phase 2.",
+  "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+  "features": [
+    { "type": "Feature", "properties": { "name": "Kucuk Cakil Beach", "category": "beach" }, "geometry": { "type": "Point", "coordinates": [29.6422, 36.1987] } },
+    { "type": "Feature", "properties": { "name": "Buyuk Cakil Beach", "category": "beach" }, "geometry": { "type": "Point", "coordinates": [29.6512, 36.1948] } },
+    { "type": "Feature", "properties": { "name": "Limanagzi Beach", "category": "beach" }, "geometry": { "type": "Point", "coordinates": [29.6560, 36.1905] } },
+    { "type": "Feature", "properties": { "name": "Town Supermarket", "category": "supermarket" }, "geometry": { "type": "Point", "coordinates": [29.6390, 36.2036] } },
+    { "type": "Feature", "properties": { "name": "Market East", "category": "supermarket" }, "geometry": { "type": "Point", "coordinates": [29.6455, 36.2052] } },
+    { "type": "Feature", "properties": { "name": "Harbour Fish Restaurant", "category": "restaurant" }, "geometry": { "type": "Point", "coordinates": [29.6369, 36.2008] } },
+    { "type": "Feature", "properties": { "name": "Old Town Meyhane", "category": "restaurant" }, "geometry": { "type": "Point", "coordinates": [29.6398, 36.2014] } },
+    { "type": "Feature", "properties": { "name": "Hilltop Grill", "category": "restaurant" }, "geometry": { "type": "Point", "coordinates": [29.6340, 36.2085] } },
+    { "type": "Feature", "properties": { "name": "Square Cafe", "category": "cafe" }, "geometry": { "type": "Point", "coordinates": [29.6384, 36.2022] } },
+    { "type": "Feature", "properties": { "name": "Seaside Coffee", "category": "cafe" }, "geometry": { "type": "Point", "coordinates": [29.6352, 36.2002] } },
+    { "type": "Feature", "properties": { "name": "Central Pharmacy", "category": "pharmacy" }, "geometry": { "type": "Point", "coordinates": [29.6401, 36.2030] } },
+    { "type": "Feature", "properties": { "name": "Kas Bus Station", "category": "bus_stop" }, "geometry": { "type": "Point", "coordinates": [29.6416, 36.2075] } },
+    { "type": "Feature", "properties": { "name": "Peninsula Road Stop", "category": "bus_stop" }, "geometry": { "type": "Point", "coordinates": [29.6280, 36.1985] } }
+  ]
+}
