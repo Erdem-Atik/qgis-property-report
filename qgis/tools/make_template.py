@@ -4,7 +4,7 @@ Run once inside the container and commit the output:
     docker compose run --rm qgis python3 tools/make_template.py
 Item ids used by report/render.py:
     title, subtitle, map, north_arrow, scalebar, legend,
-    distance_table, summary, attribution
+    distance_table, summary_title, summary, attribution
 """
 import os
 import sys
@@ -135,8 +135,11 @@ def build(layout):
     table.setCellMargin(1.2)
     layout.addMultiFrame(table)
 
-    summary = label(layout, "summary", "", MARGIN, 250, WIDTH, 26, text_format(9.5))
-    summary.setVisibility(False)  # filled in Phase 3 (AI summary)
+    title = label(layout, "summary_title", "Location summary (AI-generated from the table data only)",
+                  MARGIN, 249, WIDTH, 6, text_format(9, bold=True))
+    summary = label(layout, "summary", "[AI summary]", MARGIN, 255, WIDTH, 23, text_format(9.5))
+    for item in (title, summary):
+        item.setVisibility(False)  # shown by render.py when a summary is requested
 
     label(layout, "attribution", "Basemap and map data © OpenStreetMap contributors",
           MARGIN, 280, WIDTH, 8, text_format(7, color=MUTED))

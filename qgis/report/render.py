@@ -139,9 +139,11 @@ def build_layout(result: AnalysisResult, layers: dict, summary_text: str | None 
     _fill_table(layout, result)
 
     summary = _item(layout, "summary", QgsLayoutItemLabel)
+    summary_title = _item(layout, "summary_title", QgsLayoutItemLabel)
     if summary_text:
         summary.setText(summary_text)
         summary.setVisibility(True)
+        summary_title.setVisibility(True)
 
     source = result.poi_source or "none"
     _item(layout, "attribution", QgsLayoutItemLabel).setText(

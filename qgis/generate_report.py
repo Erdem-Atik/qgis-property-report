@@ -33,6 +33,8 @@ def parse_args(argv=None):
     p.add_argument("--poi", help="Local POI GeoJSON ('name' and 'category' properties). "
                                  "If omitted, POIs are fetched from OpenStreetMap (Overpass).")
     p.add_argument("--no-basemap", action="store_true", help="Skip the OSM basemap (offline)")
+    p.add_argument("--no-summary", action="store_true",
+                   help="Skip the AI location summary (no LLM call)")
     p.add_argument("--dpi", type=int, default=200, help="PDF raster resolution (default 200)")
     args = p.parse_args(argv)
     if args.print_query:
@@ -58,7 +60,7 @@ def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, stream=sys.stderr,
                         format="%(levelname)s %(name)s: %(message)s")
 
-    from report import osm, overpass_cache
+    from report import llm, osm, overpass_cache
 
     if args.print_query:
         try:
@@ -99,6 +101,9 @@ def main(argv=None) -> int:
     gpkg = os.path.join(args.out, "analysis.gpkg")
     pdf = os.path.join(args.out, "report.pdf")
     summary_path = os.path.join(args.out, "summary.json")
+    ai_path = os.path.join(args.out, "ai_summary.json")
+    if os.path.exists(ai_path):
+        os.remove(ai_path)  # never leave a stale summary from an earlier run
 
     # 2. POIs: local file or OpenStreetMap
     poi_meta, poi_source = {}, None
@@ -129,8 +134,17 @@ def main(argv=None) -> int:
         with open(summary_path, "w", encoding="utf-8") as fh:
             json.dump(summary, fh, indent=2, ensure_ascii=False)
 
+        # AI summary: based only on summary.json; a failure never blocks the PDF.
+        summary_text = None
+        if not args.no_summary:
+            ai = llm.try_summarize(summary)
+            with open(ai_path, "w", encoding="utf-8") as fh:
+                json.dump(ai, fh, indent=2, ensure_ascii=False)
+            summary_text = ai["text"]
+            summary["_ai_status"] = ai["status"]
+
         layers = build_project(result, uris, basemap=not args.no_basemap)
-        layout = build_layout(result, layers)
+        layout = build_layout(result, layers, summary_text=summary_text)
         export_pdf(layout, pdf, dpi=args.dpi)
         return summary
 
@@ -148,6 +162,8 @@ def main(argv=None) -> int:
     for s in summary["categories"].values():
         print(f"  {s['label']:<12} 500m={s['count_500']:<3} 1km={s['count_1000']:<3} "
               f"nearest={s['nearest_m']} m ({s['nearest_name']})")
+    if "_ai_status" in summary:
+        print(f"AI summary: {summary['_ai_status']} (see {ai_path})")
     print(f"Wrote {pdf}\n      {gpkg}\n      {summary_path}  ({time.time() - t0:.1f}s)")
     return 0
 
